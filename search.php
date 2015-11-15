@@ -1,6 +1,11 @@
 <?php
+$urlQuery = urlencode('"cat '.$_GET['q'].'"');
+$dbQuery = htmlentities($urlQuery);
+
 $databaseConnected = false;
 $queryInCache = false;
+
+$catImgUrls = array();
 try
 {
     $pdo = new PDO("sqlite:cache.db");
@@ -14,13 +19,30 @@ catch(PDOException $e)
 
 if($databaseConnected)
 {
-    //TODO: load from database
+    try
+    {
+        $request = $db->prepare('SELECT * FROM cachingTable WHERE queryText = ?');
+        $request->execute(array($dbQuery));
+
+        while($result = $request->fetch())
+        {
+            $tmpurls = unserialize($result['urls']);
+            foreach($tmpurls as $url)
+                $catImgUrls[] = $url;
+        }
+
+        $request->closeCursor();
+    }
+    catch(PDOException $e)
+    {
+        $queryInCache = false;
+    }
 }
 
 if(!$databaseConnected || !$queryInCache)
 {
     //the database could not be accessed, or did not contain this query in cache, therefore we must load to populate the cache
-    $url = 'https://lite.qwant.com/?q='.urlencode('"cat '.$_GET['q'].'"').'&t=images';
+    $url = 'https://lite.qwant.com/?q='.$urlQuery.'&t=images';
 
     libxml_use_internal_errors(true);
     $dom = new DOMDocument();
@@ -35,7 +57,7 @@ if(!$databaseConnected || !$queryInCache)
     {
         $urlimg = $results->item($i)->getElementsByTagName('a');
         for($j = 0; $j < $urlimg->length; ++$j)
-            $catimgs[] = $urlimg->item($j)->getAttribute('href');
+            $catImgUrls[] = $urlimg->item($j)->getAttribute('href');
     }
 
     if($databaseConnected)
@@ -44,6 +66,6 @@ if(!$databaseConnected || !$queryInCache)
     }
 }
 
-print_r($catimgs);
+print_r($catImgUrls);
 
 ?>
