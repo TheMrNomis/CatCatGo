@@ -67,12 +67,19 @@ if(!$databaseConnected || !$queryInCache)
 
     for($i = 0; $i < $results->length; ++$i)
     {
+        $resultimg = $results->item($i);
+
         $metadata = array();
-        $img = $results->item($i)->getElementsByTagName('img');
+        $img = $resultimg->getElementsByTagName('img');
         $metadata['src'] = $img->item(0)->getAttribute('src');
 
-        $url = $results->item($i)->getElementsByTagName('a');
+        $url = $resultimg->getElementsByTagName('a');
         $metadata['url'] = $url->item(0)->getAttribute('href');
+
+        $imgmeta = $resultimg->getElementsByTagName('div')->item(0);
+        $metadata['title'] = $imgmeta->getElementsByTagName('h2')->item(0)->nodeValue;
+        $metadata['domainname'] = $imgmeta->getElementsByTagName('p')->item(0)->nodeValue;
+        $metadata['size'] = $imgmeta->getElementsByTagName('p')->item(1)->nodeValue;
 
         $catImgUrls[] = $metadata;
     }
@@ -106,13 +113,19 @@ if(!$databaseConnected || !$queryInCache)
         </aside>
     </header>
     <section>
-    <?php
-    foreach($catImgUrls as $catimg)
-    {
-        echo '<div class="resultimg">';
-        echo '<a href="'.$catimg['url'].'"><img src="'.$catimg['src'].'" /></a>';
-        echo '</div>';
-    }
-    ?>
+        <?php
+        foreach($catImgUrls as $catimg)
+        {
+        ?>
+        <article>
+            <a href="<?php echo $catimg['url']; ?>"><img src="<?php echo $catimg['src']; ?>" /></a>
+            <div class="metadata">
+                <a href="<?php echo $catimg['url']; ?>"><h2><?php echo $catimg['title']; ?></h2></a>
+                <?php echo $catimg['size']; ?> -- <a class="domainname" href="http://<?php echo parse_url($catimg['url'])['host']; ?>"><?php echo $catimg['domainname']; ?></a>
+            </div>
+        </article>
+        <?php
+        }
+        ?>
     </section>
 </body>
