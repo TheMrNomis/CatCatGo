@@ -21,6 +21,7 @@ if($databaseConnected)
 {
     try
     {
+        echo "loading from cache\n";
         $request = $db->prepare('SELECT * FROM cachingTable WHERE queryText = ?');
         $request->execute(array($dbQuery));
 
@@ -32,6 +33,9 @@ if($databaseConnected)
         }
 
         $request->closeCursor();
+        $queryInCache = true;
+
+        //TODO: update lastQueried value on cache query
     }
     catch(PDOException $e)
     {
@@ -42,6 +46,7 @@ if($databaseConnected)
 if(!$databaseConnected || !$queryInCache)
 {
     //the database could not be accessed, or did not contain this query in cache, therefore we must load to populate the cache
+    $catImgUrls = array();
     $url = 'https://lite.qwant.com/?q='.$urlQuery.'&t=images';
 
     libxml_use_internal_errors(true);
@@ -63,6 +68,9 @@ if(!$databaseConnected || !$queryInCache)
     if($databaseConnected)
     {
         //TODO: populate the cache
+        echo "populating the cache\n";
+        $request = $db->prepare('INSERT OR REPLACE INTO cachingTable(queryText, page, lastQueried, urls) VALUES(:queryText, :page, :lastQueried, :urls)');
+        $request->execute(array('queryText'=>$dbQuery, 'page'=>0, 'lastQueried'=>date("Y-m-d"), 'urls'=>serialize($catImgUrls) ));
     }
 }
 
