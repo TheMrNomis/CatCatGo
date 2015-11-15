@@ -8,8 +8,8 @@ $queryInCache = false;
 $catImgUrls = array();
 try
 {
-    $pdo = new PDO("sqlite:cache.db");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db = new PDO("sqlite:cache.db");
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $databaseConnected = true;
 }
 catch(PDOException $e)
