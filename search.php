@@ -21,7 +21,6 @@ if($databaseConnected)
 {
     try
     {
-        echo "loading from cache\n";
         $request = $db->prepare('SELECT * FROM cachingTable WHERE queryText = :queryText AND lastQueried > :lastQueried');
         $request->execute(array('queryText'=>$dbQuery, 'lastQueried'=>date("Y-m-d", strtotime('-1 month'))));
 
@@ -32,15 +31,12 @@ if($databaseConnected)
             $tmpurls = unserialize($result['urls']);
             foreach($tmpurls as $url)
                 $catImgUrls[] = $url;
-
-            echo "from cache:\n";
-            print_r($tmpurls);
         }
 
         $request->closeCursor();
         $queryInCache = $nbResults > 0;
 
-        //TODO: update lastQueried value on cache query
+        //update lastQueried value
         $request = $db->prepare('UPDATE cachingTable SET lastQueried = :lastQueried WHERE queryText = :queryText');
         $request->execute(array('queryText'=>$dbQuery, 'lastQueried'=>date("Y-m-d")));
     }
@@ -74,7 +70,6 @@ if(!$databaseConnected || !$queryInCache)
 
     if($databaseConnected)
     {
-        echo "populating the cache\n";
         $request = $db->prepare('INSERT OR REPLACE INTO cachingTable(queryText, page, lastQueried, urls) VALUES(:queryText, :page, :lastQueried, :urls)');
         $request->execute(array('queryText'=>$dbQuery, 'page'=>0, 'lastQueried'=>date("Y-m-d"), 'urls'=>serialize($catImgUrls) ));
 
