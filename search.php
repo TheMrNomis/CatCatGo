@@ -22,20 +22,25 @@ if($databaseConnected)
     try
     {
         echo "loading from cache\n";
-        $request = $db->prepare('SELECT * FROM cachingTable WHERE queryText = ?');
-        $request->execute(array($dbQuery));
+        $request = $db->prepare('SELECT * FROM cachingTable WHERE queryText = :queryText AND lastQueried > :lastQueried');
+        $request->execute(array('queryText'=>$dbQuery, 'lastQueried'=>date("Y-m-d", strtotime('-1 month'))));
 
         while($result = $request->fetch())
         {
             $tmpurls = unserialize($result['urls']);
             foreach($tmpurls as $url)
                 $catImgUrls[] = $url;
+
+            echo "from cache:\n";
+            print_r($tmpurls);
         }
 
         $request->closeCursor();
         $queryInCache = true;
 
         //TODO: update lastQueried value on cache query
+        $request = $db->prepare('UPDATE cachingTable SET lastQueried = :lastQueried WHERE queryText = :queryText');
+        $request->execute(array('queryText'=>$dbQuery, 'lastQueried'=>date("Y-m-d")));
     }
     catch(PDOException $e)
     {
