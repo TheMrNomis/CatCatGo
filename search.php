@@ -5,6 +5,10 @@ $dbQuery = htmlentities($urlQuery);
 $databaseConnected = false;
 $queryInCache = false;
 
+$useCache = true;
+if(isset($_GET['cache']) && is_numeric($_GET['cache']) && $_GET['cache'] == 0)
+    $useCache = false;
+
 $catImgUrls = array();
 try
 {
@@ -17,7 +21,7 @@ catch(PDOException $e)
     $databaseConnected = false;
 }
 
-if($databaseConnected)
+if($databaseConnected && $useCache)
 {
     try
     {
@@ -63,9 +67,14 @@ if(!$databaseConnected || !$queryInCache)
 
     for($i = 0; $i < $results->length; ++$i)
     {
-        $urlimg = $results->item($i)->getElementsByTagName('a');
-        for($j = 0; $j < $urlimg->length; ++$j)
-            $catImgUrls[] = $urlimg->item($j)->getAttribute('href');
+        $metadata = array();
+        $img = $results->item($i)->getElementsByTagName('img');
+        $metadata['src'] = $img->item(0)->getAttribute('src');
+
+        $url = $results->item($i)->getElementsByTagName('a');
+        $metadata['url'] = $url->item(0)->getAttribute('href');
+
+        $catImgUrls[] = $metadata;
     }
 
     if($databaseConnected)
@@ -78,7 +87,20 @@ if(!$databaseConnected || !$queryInCache)
         $request->execute(array('lastQueried'=>date("Y-m-d", strtotime('-1 month'))));
     }
 }
-
-print_r($catImgUrls);
-
 ?>
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title><?php echo $_GET['q']; ?> at CatCatGo</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <?php
+    foreach($catImgUrls as $catimg)
+    {
+        echo '<div class="resultimg">';
+        echo '<a href="'.$catimg['url'].'"><img src="'.$catimg['src'].'" /></a>';
+        echo '</div>';
+    }
+    ?>
+</body>
