@@ -25,8 +25,10 @@ if($databaseConnected)
         $request = $db->prepare('SELECT * FROM cachingTable WHERE queryText = :queryText AND lastQueried > :lastQueried');
         $request->execute(array('queryText'=>$dbQuery, 'lastQueried'=>date("Y-m-d", strtotime('-1 month'))));
 
+        $nbResults = 0;
         while($result = $request->fetch())
         {
+            ++$nbResults;
             $tmpurls = unserialize($result['urls']);
             foreach($tmpurls as $url)
                 $catImgUrls[] = $url;
@@ -36,7 +38,7 @@ if($databaseConnected)
         }
 
         $request->closeCursor();
-        $queryInCache = true;
+        $queryInCache = $nbResults > 0;
 
         //TODO: update lastQueried value on cache query
         $request = $db->prepare('UPDATE cachingTable SET lastQueried = :lastQueried WHERE queryText = :queryText');
@@ -72,10 +74,13 @@ if(!$databaseConnected || !$queryInCache)
 
     if($databaseConnected)
     {
-        //TODO: populate the cache
         echo "populating the cache\n";
         $request = $db->prepare('INSERT OR REPLACE INTO cachingTable(queryText, page, lastQueried, urls) VALUES(:queryText, :page, :lastQueried, :urls)');
         $request->execute(array('queryText'=>$dbQuery, 'page'=>0, 'lastQueried'=>date("Y-m-d"), 'urls'=>serialize($catImgUrls) ));
+
+        //delete cached values that are more than one month old
+        $request = $db->prepare('DELETE FROM cachingTable WHERE lastQueried <= :lastQueried');
+        $request->execute(array('lastQueried'=>date("Y-m-d", strtotime('-1 month'))));
     }
 }
 
