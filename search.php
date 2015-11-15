@@ -95,6 +95,17 @@ if(!$databaseConnected || !$queryInCache)
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+    <header>
+        <a href="./"><img id="logo" src="./CatCatGo.svg" /></a>
+        <form method="get" action="./search.php">
+            <input type="search" name="q" id="q" class="textarea" value="<?php echo $_GET['q']; ?>" />
+            <input type="submit" class="submit" value="" />
+        </form>
+        <aside>
+            Results powered by <a href="https://www.qwant.com/">Qwant</a>
+        </aside>
+    </header>
+    <section>
     <?php
     foreach($catImgUrls as $catimg)
     {
@@ -103,4 +114,5 @@ if(!$databaseConnected || !$queryInCache)
         echo '</div>';
     }
     ?>
+    </section>
 </body>

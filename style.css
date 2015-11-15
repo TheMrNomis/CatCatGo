@@ -2,6 +2,8 @@ html {
     background-color: #F7F7F7;
     border-top: 4px solid #6f33de;
     font-size: 100%;
+    font-family: sans-serif;
+    color: #4c4c4c;
 }
 
 #search-block {
@@ -12,11 +14,6 @@ html {
     top: 50%;
     margin-left: -250px;
     margin-top: -250px;
-}
-
-#search-block #logo {
-    font-family: sans-serif;
-    color: #4c4c4c;
 }
 
 #search-block #logo img {
@@ -35,16 +32,16 @@ html {
     margin-top: -40px;
 }
 
-#search-block form {
+form {
     display: block;
-    width: inherit;
+    width: 500px;
     height: 46px;
     position: absolute;
     background-color: #FFFFFF;
     border: 1px solid #d0d0d0;
 }
 
-#search-block form .textarea {
+form .textarea {
     display: inline-block;
     height: inherit;
     width: 444px;
@@ -55,7 +52,7 @@ html {
     color: #3c3c3c;
 }
 
-#search-block form .submit {
+form .submit {
     background-color: #ffffff;
     background-image: url('search-b.svg');
     background-repeat: no-repeat;
@@ -69,7 +66,57 @@ html {
     border: none;
 }
 
-#search-block form .submit:hover {
+form .submit:hover {
     background-color: #6f33de;
     background-image: url('search-w.svg');
+}
+
+header {
+/*    background-color: aqua;*/
+    border-bottom: 1px solid #D9D9D9;
+    width: 100%;
+    height: 120px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+header #logo {
+    display: inline-block;
+    width: auto;
+    height: 100px;
+    position: absolute;
+    top: 50%;
+    margin-top: -40px;
+}
+
+header form {
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    margin-top: -24px;
+    left: 120px;
+}
+
+header aside {
+    text-align: right;
+    display: block;
+    width: 200px;
+    height: 1.2em;
+    position: absolute;
+    right: 0px;
+    margin-right: 0.5em;
+    top: 100%;
+    margin-top: -1.7em;
+}
+
+header aside a {
+    text-decoration: none;
+}
+
+section {
+    height: auto;
+    width: auto;
+    position: absolute;
+    top: 150px;
 }
