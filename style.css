@@ -1,0 +1,75 @@
+html {
+    background-color: #F7F7F7;
+    border-top: 4px solid #6f33de;
+    font-size: 100%;
+}
+
+#search-block {
+    width: 500px;
+    height: 300px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -250px;
+    margin-top: -250px;
+}
+
+#search-block #logo {
+    font-family: sans-serif;
+    color: #4c4c4c;
+}
+
+#search-block #logo img {
+    display: block;
+    width: 250px;
+    height: 200px;
+    margin-left: 125px;
+}
+
+#search-block #logo h1 {
+    text-decoration: none;
+    font-weight: normal;
+    text-align: center;
+    display: block;
+    width: inherit;
+    margin-top: -40px;
+}
+
+#search-block form {
+    display: block;
+    width: inherit;
+    height: 46px;
+    position: absolute;
+    background-color: #FFFFFF;
+    border: 1px solid #d0d0d0;
+}
+
+#search-block form .textarea {
+    display: inline-block;
+    height: inherit;
+    width: 444px;
+    border: none;
+    line-height: 1.6;
+    font-size: 1.6em;
+    padding-left: 10px;
+    color: #3c3c3c;
+}
+
+#search-block form .submit {
+    background-color: #ffffff;
+    background-image: url('search-b.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 5px;
+    display: inline-block;
+    position: absolute;
+    height: 40px;
+    width: 50px;
+    margin: 3px;
+    border: none;
+}
+
+#search-block form .submit:hover {
+    background-color: #6f33de;
+    background-image: url('search-w.svg');
+}
