@@ -119,6 +119,7 @@ if(isset($_GET['q']))
     </header>
     <section>
         <?php
+    $count = 0;
     foreach($catImgUrls as $catimg)
     {
         ?>
@@ -129,6 +130,13 @@ if(isset($_GET['q']))
                 <?php echo $catimg['size']; ?> -- <a class="domainname" href="http://<?php echo parse_url($catimg['url'])['host']; ?>"><?php echo $catimg['domainname']; ?></a>
             </div>
         </article>
+        <?php
+        $count++;
+    }
+    if($count == 0)
+    {
+    ?>
+        <div id="catsanscat"><img src="./catsanscat.png" alt="no results" /></div>
         <?php
     }
         ?>
