@@ -1,2 +1,2 @@
 # CatCatGo
-CatCatGo is a small image search engine (using [https://www.qwant.com/](qwant) as backend) wich only search for cat pictures.
+CatCatGo is a small image search engine (using [qwant](https://www.qwant.com/) as backend) wich only search for cat pictures.
